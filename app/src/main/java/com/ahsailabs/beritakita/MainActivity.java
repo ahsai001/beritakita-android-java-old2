@@ -1,13 +1,18 @@
 package com.ahsailabs.beritakita;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
+import com.ahsailabs.beritakita.ui.login.LoginActivity;
+import com.ahsailabs.beritakita.utils.InfoUtil;
 import com.ahsailabs.beritakita.utils.SessionUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,6 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private CoordinatorLayout clRoot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +34,23 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //open latihan ui activity
-                //LatihanUiActivity.start(MainActivity.this);
+        clRoot = findViewById(R.id.clRoot);
 
-                //masuk form tambah berita baru atau masuk ke form login jika belum login
-                if(SessionUtil.isLoggedIn(MainActivity.this)){
-                    // masuk form tambah berita
-                } else {
-                    // masuk form login
-                }
+        fab.setOnClickListener(view -> {
+            //open latihan ui activity
+            //LatihanUiActivity.start(MainActivity.this);
+
+            //masuk form tambah berita baru atau masuk ke form login jika belum login
+            boolean isLoggedIn = SessionUtil.isLoggedIn(MainActivity.this);
+            if(isLoggedIn){
+                // masuk form tambah berita
+                //InfoUtil.showSnackBar(clRoot, "Anda sudah login, silakan kirim berita baru");
+
+                //start addbnewsactivity
+                AddNewsActivity.start(this);
+            } else {
+                // masuk form login
+                LoginActivity.start(this);
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -60,6 +71,16 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.main_action_logout){
+            SessionUtil.logout(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

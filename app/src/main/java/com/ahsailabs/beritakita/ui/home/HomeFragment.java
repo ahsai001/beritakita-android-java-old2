@@ -2,6 +2,9 @@ package com.ahsailabs.beritakita.ui.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -13,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ahsailabs.beritakita.R;
 import com.ahsailabs.beritakita.configs.Config;
@@ -21,6 +25,7 @@ import com.ahsailabs.beritakita.ui.home.models.News;
 import com.ahsailabs.beritakita.ui.home.models.NewsListResponse;
 import com.ahsailabs.beritakita.utils.HttpUtil;
 import com.ahsailabs.beritakita.utils.InfoUtil;
+import com.ahsailabs.beritakita.utils.SwipeRefreshLayoutUtil;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
@@ -36,17 +41,29 @@ public class HomeFragment extends Fragment {
 
     private ProgressBar pbLoadingIndicator;
     private LinearLayout llLoadingPanel;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayoutUtil swipeRefreshLayoutUtil;
+
     private HomeViewModel homeViewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
 
-        loadViews(root);
-
-        return root;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadViews(view);
     }
 
     @Override
@@ -55,7 +72,7 @@ public class HomeFragment extends Fragment {
 
         setupViews();
         setupListener();
-        loadData();
+        swipeRefreshLayoutUtil.refreshNow();
     }
 
     private void loadData() {
@@ -80,6 +97,7 @@ public class HomeFragment extends Fragment {
                             InfoUtil.showToast(getActivity(), response.getMessage());
                         }
                         hideLoading();
+                        swipeRefreshLayoutUtil.refreshDone();
                     }
 
                     @Override
@@ -87,6 +105,7 @@ public class HomeFragment extends Fragment {
                         //TODO: show info error
                         InfoUtil.showToast(getActivity(), anError.getMessage());
                         hideLoading();
+                        swipeRefreshLayoutUtil.refreshDone();
                     }
                 });
 
@@ -102,12 +121,20 @@ public class HomeFragment extends Fragment {
         newsList = new ArrayList<>();
         newsAdapter = new NewsAdapter(newsList);
         rvList.setAdapter(newsAdapter);
+
+        swipeRefreshLayoutUtil = SwipeRefreshLayoutUtil.init(swipeRefreshLayout, new Runnable() {
+            @Override
+            public void run() {
+                loadData();
+            }
+        });
     }
 
     private void loadViews(View root) {
         rvList = root.findViewById(R.id.rvList);
         pbLoadingIndicator = root.findViewById(R.id.pbLoadingIndicator);
         llLoadingPanel = root.findViewById(R.id.llLoadingPanel);
+        swipeRefreshLayout = root.findViewById(R.id.srlHome);
     }
 
     private void showLoading(){
@@ -120,5 +147,22 @@ public class HomeFragment extends Fragment {
         rvList.setVisibility(View.VISIBLE);
         llLoadingPanel.setVisibility(View.GONE);
         pbLoadingIndicator.setProgress(0);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.home_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.home_action_refresh){
+            swipeRefreshLayoutUtil.refreshNow();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
