@@ -1,6 +1,8 @@
 package com.ahsailabs.beritakita;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -8,6 +10,7 @@ import com.ahsailabs.beritakita.configs.Config;
 import com.ahsailabs.beritakita.ui.addnews.models.AddNewsResponse;
 import com.ahsailabs.beritakita.utils.HttpUtil;
 import com.ahsailabs.beritakita.utils.InfoUtil;
+import com.ahsailabs.beritakita.utils.PermissionUtil;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
@@ -17,16 +20,28 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.ahsailabs.beritakita.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.NotNull;
+
+import pl.aprilapps.easyphotopicker.ChooserType;
+import pl.aprilapps.easyphotopicker.EasyImage;
+import pl.aprilapps.easyphotopicker.MediaFile;
+import pl.aprilapps.easyphotopicker.MediaSource;
 
 public class AddNewsActivity extends AppCompatActivity {
     private TextInputLayout tilTitle;
@@ -40,12 +55,20 @@ public class AddNewsActivity extends AppCompatActivity {
 
     private ExtendedFloatingActionButton fab;
 
+    private EasyImage easyImage;
+    private PermissionUtil permissionUtil;
+    private MediaFile mediaFile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_news);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setTitle("Form Tambah Berita");
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fab = findViewById(R.id.fab);
         hideLoading();
@@ -60,7 +83,79 @@ public class AddNewsActivity extends AppCompatActivity {
             }
         });
 
+        setupEasyImage();
         loadViews();
+        setupListeners();
+    }
+
+    private void setupListeners() {
+        mbtnPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddNewsActivity.this);
+                builder.setTitle("How do you get the image?");
+                final String[] options = {"Camera", "Gallery"};
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        if(options[which].equals("Camera")){
+                            permissionUtil = PermissionUtil.checkPermissionAndGo(AddNewsActivity.this, 1003, new Runnable() {
+                                @Override
+                                public void run() {
+                                    easyImage.openCameraForImage(AddNewsActivity.this);
+                                }
+                            }, Manifest.permission.CAMERA);
+                        } else {
+                            easyImage.openDocuments(AddNewsActivity.this);
+                        }
+                    }
+                });
+
+                builder.create().show();
+            }
+        });
+    }
+
+    private void setupEasyImage() {
+        easyImage = new EasyImage.Builder(this)
+                .setChooserTitle("How do you get an image?")
+                .setChooserType(ChooserType.CAMERA_AND_DOCUMENTS)
+                .build();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(permissionUtil != null){
+            permissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(easyImage != null){
+            easyImage.handleActivityResult(requestCode, resultCode, data, this, new EasyImage.Callbacks() {
+                @Override
+                public void onImagePickerError(@NotNull Throwable throwable, @NotNull MediaSource mediaSource) {
+
+                }
+
+                @Override
+                public void onMediaFilesPicked(@NotNull MediaFile[] mediaFiles, @NotNull MediaSource mediaSource) {
+                    mediaFile = mediaFiles[0];
+                    Picasso.get().load(mediaFile.getFile()).into(ivPhoto);
+                }
+
+                @Override
+                public void onCanceled(@NotNull MediaSource mediaSource) {
+
+                }
+            });
+        }
     }
 
     private void validateAndSendData() {
@@ -72,6 +167,11 @@ public class AddNewsActivity extends AppCompatActivity {
         //validasi data
         if(TextUtils.isEmpty(strTitle)){
             tilTitle.setError("title cannot be empty");
+            return;
+        }
+
+        if(mediaFile == null){
+            mbtnPhoto.setError("Gambar tidak boleh kosong");
             return;
         }
 
@@ -93,12 +193,13 @@ public class AddNewsActivity extends AppCompatActivity {
 
     private void sendData(String strTitle, String strSummary, String strBody) {
         showLoading();
-        AndroidNetworking.post(Config.getAddNewsUrl())
+        AndroidNetworking.upload(Config.getAddNewsUrl())
                 .setOkHttpClient(HttpUtil.getCLient(this))
-                .addBodyParameter("title", strTitle)
-                .addBodyParameter("summary", strSummary)
-                .addBodyParameter("body", strBody)
-                .addBodyParameter("groupcode", Config.GROUP_CODE)
+                .addMultipartFile("photo", mediaFile.getFile())
+                .addMultipartParameter("title", strTitle)
+                .addMultipartParameter("summary", strSummary)
+                .addMultipartParameter("body", strBody)
+                .addMultipartParameter("groupcode", Config.GROUP_CODE)
                 .setTag("addnews")
                 .setPriority(Priority.HIGH)
                 .build()
@@ -106,7 +207,10 @@ public class AddNewsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(AddNewsResponse response) {
                         if(response.getStatus() == 1){
-                            InfoUtil.showToast(AddNewsActivity.this, "suskses posting pertamax");
+                            InfoUtil.showToast(AddNewsActivity.this, "suskses tambah berita");
+
+                            //tutup halaman tambah berita
+                            finish();
                         } else {
                             InfoUtil.showToast(AddNewsActivity.this, response.getMessage());
                         }
@@ -139,9 +243,17 @@ public class AddNewsActivity extends AppCompatActivity {
         tietBody = findViewById(R.id.tietBody);
         mbtnPhoto = findViewById(R.id.mbtnPhoto);
         ivPhoto = findViewById(R.id.ivPhoto);
-
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+            //onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public static void start(Context context){
         Intent addNewsIntent = new Intent(context, AddNewsActivity.class);

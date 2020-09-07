@@ -69,10 +69,30 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setupViews();
         setupListener();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         swipeRefreshLayoutUtil.refreshNow();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     private void loadData() {
@@ -80,7 +100,7 @@ public class HomeFragment extends Fragment {
         AndroidNetworking.post(Config.getNewsListUrl())
                 .setOkHttpClient(HttpUtil.getCLient(getActivity()))
                 .addBodyParameter("groupcode", Config.GROUP_CODE)
-                .addBodyParameter("")
+                .addBodyParameter("keyword", "")
                 .setTag("newslist")
                 .setPriority(Priority.HIGH)
                 .build()
@@ -90,6 +110,7 @@ public class HomeFragment extends Fragment {
                         if(response.getStatus() == 1){
                             List<News> resultList = response.getData();
                             //TODO: show listview dengan data resultList
+                            newsList.clear();
                             newsList.addAll(resultList);
                             newsAdapter.notifyDataSetChanged();
                         } else {
