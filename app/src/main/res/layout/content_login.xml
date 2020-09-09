@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.login.LoginActivity"
+    tools:context=".LoginActivity"
     tools:showIn="@layout/activity_login">
 
 
@@ -60,7 +60,6 @@
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <include layout="@layout/loading_layout"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogin"
@@ -72,5 +71,8 @@
             android:textAllCaps="false" />
 
     </LinearLayout>
+
+
+    <include layout="@layout/loading_layout"/>
 
 </RelativeLayout>

@@ -23,4 +23,7 @@
     <string name="title_activity_add_news">Tambah Berita</string>
     <string name="wording_please_wait">Please wait</string>
     <string name="title_activity_detail">Detail Berita</string>
+    <string name="please_wait">Mohon tunggu</string>
+    <string name="menu_login">Login</string>
+    <string name="menu_logout">Logout</string>
 </resources>

@@ -1,19 +1,27 @@
 package com.ahsailabs.beritakita;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Menu;
+import android.view.View;
+import android.widget.TextView;
 
-import com.ahsailabs.beritakita.ui.login.LoginActivity;
-import com.ahsailabs.beritakita.utils.InfoUtil;
+import com.ahsailabs.beritakita.bases.BaseApp;
+import com.ahsailabs.beritakita.ui.login.models.LoginData;
 import com.ahsailabs.beritakita.utils.SessionUtil;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -25,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private CoordinatorLayout clRoot;
+    NavigationView navigationView;
+
+    public static void start(Context context) {
+        Intent mainIntent = new Intent(context, MainActivity.class);
+        context.startActivity(mainIntent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,17 +67,81 @@ public class MainActivity extends AppCompatActivity {
                 LoginActivity.start(this);
             }
         });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-                .setDrawerLayout(drawer)
+                R.id.nav_home, R.id.nav_login, R.id.nav_logout, R.id.nav_gallery, R.id.nav_slideshow)
+                .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        Log.d("MainActivity", ((BaseApp)getApplication()).data);
+
+
+        //put refreshdrawer in drawerlistener
+        /*drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                refreshDrawer();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+        });*/
+
+        //atau
+
+        //put refreshdrawer in DestinationChangedListener
+        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                refreshDrawer();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshDrawer();
+    }
+
+    private void refreshDrawer(){
+        MenuItem navLogin = navigationView.getMenu().findItem(R.id.nav_login);
+        MenuItem navLogout = navigationView.getMenu().findItem(R.id.nav_logout);
+
+        LoginData loginData;
+
+        //update menu drawer
+        if(SessionUtil.isLoggedIn(this)){
+            navLogin.setVisible(false);
+            navLogout.setVisible(true);
+            loginData = SessionUtil.getLoginData(this);
+        } else {
+            navLogin.setVisible(true);
+            navLogout.setVisible(false);
+
+            loginData = new LoginData();
+            loginData.setName("anonymous");
+            loginData.setUsername("anonymous");
+        }
+
+        //update headerview with loginData
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvName = headerView.findViewById(R.id.tvName);
+        TextView tvUserName = headerView.findViewById(R.id.tvUserName);
+
+        tvName.setText(loginData.getName());
+        tvUserName.setText(String.format("@%s", loginData.getUsername()));
+
     }
 
     @Override
@@ -74,14 +152,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem menuItem = menu.findItem(R.id.main_action_logout);
+        if(SessionUtil.isLoggedIn(this)){
+            menuItem.setTitle("Logout");
+        } else {
+            menuItem.setTitle("Login");
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.main_action_logout){
-            SessionUtil.logout(this);
+            if(SessionUtil.isLoggedIn(this)) {
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("Logout Confirmation")
+                        .setMessage("Are you sure?")
+                        .setPositiveButton("logout", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                SessionUtil.logout(MainActivity.this);
+                                refreshDrawer();
+                            }
+                        })
+                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+                        .setNeutralButton("netral", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }).show();
+            } else {
+                LoginActivity.start(this);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {

@@ -45,7 +45,7 @@ public class NewsAdapter extends BaseRecyclerViewAdapter<News, NewsAdapter.NewsV
             Picasso.get().load(dataModel.getPhoto()).into(holder.ivPhoto);
             holder.ivPhoto.setVisibility(View.VISIBLE);
         }
-
+        setViewClickable(holder, holder.itemView);
     }
 
     public static class NewsViewHolder extends RecyclerView.ViewHolder{

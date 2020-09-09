@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.ahsailabs.beritakita.R;
+
 public class Second3Fragment extends Fragment {
 
     @Override

@@ -16,6 +16,7 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -92,7 +93,7 @@ public class AddNewsActivity extends AppCompatActivity {
         mbtnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(AddNewsActivity.this);
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(AddNewsActivity.this);
                 builder.setTitle("How do you get the image?");
                 final String[] options = {"Camera", "Gallery"};
                 builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -253,6 +254,13 @@ public class AddNewsActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        AndroidNetworking.cancel("addnews");
+        super.onDestroy();
     }
 
     public static void start(Context context){

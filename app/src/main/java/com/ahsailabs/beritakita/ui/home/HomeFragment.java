@@ -12,13 +12,16 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.ahsailabs.beritakita.DetailActivity;
 import com.ahsailabs.beritakita.R;
+import com.ahsailabs.beritakita.bases.BaseRecyclerViewAdapter;
 import com.ahsailabs.beritakita.configs.Config;
 import com.ahsailabs.beritakita.ui.home.adapters.NewsAdapter;
 import com.ahsailabs.beritakita.ui.home.models.News;
@@ -30,6 +33,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +49,11 @@ public class HomeFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private SwipeRefreshLayoutUtil swipeRefreshLayoutUtil;
 
+    private ShimmerFrameLayout sflLoading;
+
     private HomeViewModel homeViewModel;
+
+    private String keyword = "";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,7 +108,7 @@ public class HomeFragment extends Fragment {
         AndroidNetworking.post(Config.getNewsListUrl())
                 .setOkHttpClient(HttpUtil.getCLient(getActivity()))
                 .addBodyParameter("groupcode", Config.GROUP_CODE)
-                .addBodyParameter("keyword", "")
+                .addBodyParameter("keyword", keyword)
                 .setTag("newslist")
                 .setPriority(Priority.HIGH)
                 .build()
@@ -134,7 +142,18 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupListener() {
+        //setup item click listener
+        newsAdapter.setOnChildViewClickListener(new BaseRecyclerViewAdapter.OnChildViewClickListener<News>() {
+            @Override
+            public void onClick(View view, News dataModel, int position) {
+                DetailActivity.start(view.getContext(), dataModel.getId());
+            }
 
+            @Override
+            public void onLongClick(View view, News dataModel, int position) {
+
+            }
+        });
     }
 
     private void setupViews() {
@@ -156,24 +175,56 @@ public class HomeFragment extends Fragment {
         pbLoadingIndicator = root.findViewById(R.id.pbLoadingIndicator);
         llLoadingPanel = root.findViewById(R.id.llLoadingPanel);
         swipeRefreshLayout = root.findViewById(R.id.srlHome);
+        sflLoading = root.findViewById(R.id.sflLoading);
     }
 
     private void showLoading(){
         rvList.setVisibility(View.GONE);
-        llLoadingPanel.setVisibility(View.VISIBLE);
-        pbLoadingIndicator.setProgress(50);
+        //llLoadingPanel.setVisibility(View.VISIBLE);
+        //pbLoadingIndicator.setProgress(50);
+
+        sflLoading.startShimmer();
+        sflLoading.setVisibility(View.VISIBLE);
     }
 
     private void hideLoading(){
         rvList.setVisibility(View.VISIBLE);
-        llLoadingPanel.setVisibility(View.GONE);
-        pbLoadingIndicator.setProgress(0);
+        //llLoadingPanel.setVisibility(View.GONE);
+        //pbLoadingIndicator.setProgress(0);
+
+        sflLoading.stopShimmer();
+        sflLoading.setVisibility(View.GONE);
     }
 
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.home_menu, menu);
+
+        SearchView searchView = (SearchView) menu.findItem(R.id.home_action_search).getActionView();
+        searchView.setIconifiedByDefault(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                keyword = query;
+                swipeRefreshLayoutUtil.refreshNow();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                keyword = "";
+                swipeRefreshLayoutUtil.refreshNow();
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -185,5 +236,11 @@ public class HomeFragment extends Fragment {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroyView() {
+        AndroidNetworking.cancel("newslist");
+        super.onDestroyView();
     }
 }

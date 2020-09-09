@@ -3,8 +3,8 @@ package com.ahsailabs.beritakita.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ahsailabs.beritakita.MainActivity;
 import com.ahsailabs.beritakita.configs.Config;
-import com.ahsailabs.beritakita.ui.login.LoginActivity;
 import com.ahsailabs.beritakita.ui.login.models.LoginData;
 
 /**
@@ -33,5 +33,14 @@ public class SessionUtil {
         editor.remove(Config.DATA_USERNAME);
         editor.remove(Config.DATA_ISLOGGEDIN);
         editor.apply();
+    }
+
+    public static LoginData getLoginData(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Config.APP_PREFERENCES, Context.MODE_PRIVATE);
+        LoginData loginData = new LoginData();
+        loginData.setToken(sharedPreferences.getString(Config.DATA_TOKEN, ""));
+        loginData.setUsername(sharedPreferences.getString(Config.DATA_USERNAME, ""));
+        loginData.setName(sharedPreferences.getString(Config.DATA_NAME, ""));
+        return loginData;
     }
 }
