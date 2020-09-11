@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "146257912215",
+    "firebase_url": "https://beritakita-fc408.firebaseio.com",
+    "project_id": "beritakita-fc408",
+    "storage_bucket": "beritakita-fc408.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146257912215:android:ba4f27f3c213eb0463e4d2",
+        "android_client_info": {
+          "package_name": "com.ahsailabs.beritakita"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146257912215-f86pdjl36dah2fhqq11utgnjeutrgb6c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ahsailabs.beritakita",
+            "certificate_hash": "e821844e70a0fc41d45ceade3d3ad5bc36fef673"
+          }
+        },
+        {
+          "client_id": "146257912215-070gv5r9topsae1kt4370asoaklgrf42.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaIY-7pym9MBsrX4Pol9s1cUo8OmC8etA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146257912215-070gv5r9topsae1kt4370asoaklgrf42.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -11,11 +11,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ahsailabs.beritakita.bases.BaseApp;
+import com.ahsailabs.beritakita.configs.Config;
 import com.ahsailabs.beritakita.ui.login.models.LoginData;
 import com.ahsailabs.beritakita.utils.SessionUtil;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -105,6 +111,29 @@ public class MainActivity extends AppCompatActivity {
                 refreshDrawer();
             }
         });
+
+        FirebaseMessaging.getInstance().subscribeToTopic(Config.GROUP_CODE).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d("beritakita", "sukses subscribe");
+                } else {
+                    Log.d("beritakita", "gagal subscribe");
+                }
+            }
+        });
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        // Get new Instance ID token
+                        if(task.isSuccessful()) {
+                            String token = task.getResult().getToken();
+                            Log.d("beritakita", "token:" + token);
+                        }
+                    }
+                });
 
     }
 
