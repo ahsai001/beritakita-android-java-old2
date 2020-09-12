@@ -38,12 +38,6 @@ public class LogoutDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
-                })
-                .setNeutralButton("netral", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
                 });
 
         return dialogBuilder.create();
