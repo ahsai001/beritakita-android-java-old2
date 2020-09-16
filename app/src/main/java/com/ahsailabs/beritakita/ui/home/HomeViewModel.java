@@ -1,19 +1,15 @@
 package com.ahsailabs.beritakita.ui.home;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+import com.ahsailabs.beritakita.ui.home.models.News;
 
-    private MutableLiveData<String> mText;
+import java.util.ArrayList;
+
+public class HomeViewModel extends ViewModel {
+    public ArrayList<News> newsList;
 
     public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
-    }
-
-    public LiveData<String> getText() {
-        return mText;
+        newsList = new ArrayList<>();
     }
 }

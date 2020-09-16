@@ -7,21 +7,9 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.ahsailabs.beritakita.ui.home.HomeFragment"
+        android:name="com.ahsailabs.beritakita.ui.home.HomeFragmentVM"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.ahsailabs.beritakita.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.ahsailabs.beritakita.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
 
     <dialog
         android:id="@+id/nav_logout"
@@ -34,5 +22,28 @@
         android:label="Login nav"
         tools:layout="@layout/content_login" />
 
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="com.ahsailabs.beritakita.ui.login.LoginFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+        <action
+            android:id="@+id/action_LoginFragment_to_SecondFragment"
+            app:destination="@id/LoginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/First2Fragment"
+        android:name="com.ahsailabs.beritakita.ui.addnews.AddNewsFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first2">
+    </fragment>
+
+    <fragment
+        android:id="@+id/First3Fragment"
+        android:name="com.ahsailabs.beritakita.ui.detail.DetailFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first3">
+    </fragment>
 
 </navigation>

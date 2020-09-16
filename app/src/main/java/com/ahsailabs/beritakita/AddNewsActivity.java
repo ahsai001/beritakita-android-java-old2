@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.ahsailabs.beritakita.configs.Config;
 import com.ahsailabs.beritakita.ui.addnews.models.AddNewsResponse;
+import com.ahsailabs.beritakita.ui.home.HomeViewModel;
 import com.ahsailabs.beritakita.utils.HttpUtil;
 import com.ahsailabs.beritakita.utils.InfoUtil;
 import com.ahsailabs.beritakita.utils.PermissionUtil;
@@ -26,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
 import android.view.MenuItem;

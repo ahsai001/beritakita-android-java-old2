@@ -1,4 +1,4 @@
-package com.ahsailabs.beritakita.ui.addnews;
+package com.ahsailabs.beritakita.ui.detail;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.ahsailabs.beritakita.R;
 
-public class First2Fragment extends Fragment {
+public class DetailFragment extends Fragment {
 
     @Override
     public View onCreateView(
@@ -19,7 +19,7 @@ public class First2Fragment extends Fragment {
             Bundle savedInstanceState
     ) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first2, container, false);
+        return inflater.inflate(R.layout.fragment_first3, container, false);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -28,8 +28,8 @@ public class First2Fragment extends Fragment {
         view.findViewById(R.id.button_first).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(First2Fragment.this)
-                        .navigate(R.id.action_First2Fragment_to_Second2Fragment);
+                NavHostFragment.findNavController(DetailFragment.this)
+                        .navigate(R.id.action_LoginFragment_to_SecondFragment);
             }
         });
     }

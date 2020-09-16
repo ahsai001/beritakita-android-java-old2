@@ -23,9 +23,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     @Override
-    public void onNewToken(@NonNull String s) {
-        super.onNewToken(s);
-        Log.d("beritakita", "new token:" + s);
+    public void onNewToken(@NonNull String newToken) {
+        super.onNewToken(newToken);
+        Log.d("beritakita", "new token:" + newToken);
+
+        sendTokenToServer(newToken);
+    }
+
+    private void sendTokenToServer(String newToken) {
+        //kirim token via api, bisa pake retrofit atau androidnetworking
     }
 
 

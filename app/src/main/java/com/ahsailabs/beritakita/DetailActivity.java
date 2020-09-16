@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.ahsailabs.beritakita.configs.Config;
+import com.ahsailabs.beritakita.ui.detail.DetailViewModel;
 import com.ahsailabs.beritakita.ui.detail.models.NewsDetail;
 import com.ahsailabs.beritakita.ui.detail.models.NewsDetailResponse;
 import com.ahsailabs.beritakita.utils.HttpUtil;
@@ -20,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -47,6 +49,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private LinearLayout llLoadingPanel;
     private ProgressBar pbLoadingIndicator;
+    private DetailViewModel detailViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,15 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         loadViews();
-        loadData();
+
+        detailViewModel = new ViewModelProvider(this).get(DetailViewModel.class);
+
+        if(savedInstanceState == null || detailViewModel.newsDetail==null) {
+            loadData();
+        } else {
+            updateView();
+        }
+
     }
 
     private void loadData() {
@@ -74,19 +85,8 @@ public class DetailActivity extends AppCompatActivity {
                     public void onResponse(NewsDetailResponse response) {
                         if(response.getStatus() == 1){
                             //show detail in views
-                            NewsDetail newsDetail = response.getNewsDetail();
-
-                            tvTitle.setText(newsDetail.getTitle());
-                            getSupportActionBar().setTitle(newsDetail.getTitle());
-
-                            tvDate.setText(newsDetail.getCreatedAt());
-                            tvUser.setText(newsDetail.getCreatedBy());
-                            tvBody.setText(newsDetail.getBody());
-
-                            if(!TextUtils.isEmpty(newsDetail.getPhoto())){
-                                Picasso.get().load(newsDetail.getPhoto()).into(ivPhoto);
-                            }
-
+                            detailViewModel.newsDetail = response.getNewsDetail();
+                            updateView();
                         } else {
                             InfoUtil.showToast(DetailActivity.this, response.getMessage());
                         }
@@ -99,6 +99,19 @@ public class DetailActivity extends AppCompatActivity {
                         hideLoading();
                     }
                 });
+    }
+
+    private void updateView() {
+        tvTitle.setText(detailViewModel.newsDetail.getTitle());
+        getSupportActionBar().setTitle(detailViewModel.newsDetail.getTitle());
+
+        tvDate.setText(detailViewModel.newsDetail.getCreatedAt());
+        tvUser.setText(detailViewModel.newsDetail.getCreatedBy());
+        tvBody.setText(detailViewModel.newsDetail.getBody());
+
+        if(!TextUtils.isEmpty(detailViewModel.newsDetail.getPhoto())){
+            Picasso.get().load(detailViewModel.newsDetail.getPhoto()).into(ivPhoto);
+        }
     }
 
     private void showLoading(){

@@ -14,8 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -39,9 +40,8 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragmentVM extends Fragment {
     private RecyclerView rvList;
-    private ArrayList<News> newsList;
     private NewsAdapter newsAdapter;
 
     private ProgressBar pbLoadingIndicator;
@@ -56,15 +56,29 @@ public class HomeFragment extends Fragment {
 
     private String keyword = "";
 
+    private boolean isRecreated = false;
+
+    private MutableLiveData<String> data = new MutableLiveData<>();
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        data.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+
+            }
+        });
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        if(savedInstanceState != null){
+            isRecreated = true;
+        }
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -89,7 +103,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        swipeRefreshLayoutUtil.refreshNow();
+
+        if(isRecreated) {
+            isRecreated = false;
+        } else {
+            swipeRefreshLayoutUtil.refreshNow();
+        }
     }
 
     @Override
@@ -115,11 +134,11 @@ public class HomeFragment extends Fragment {
                 .getAsObject(NewsListResponse.class, new ParsedRequestListener<NewsListResponse>() {
                     @Override
                     public void onResponse(NewsListResponse response) {
-                        if(response.getStatus() == 1){
+                        if (response.getStatus() == 1) {
                             List<News> resultList = response.getData();
                             //TODO: show listview dengan data resultList
-                            newsList.clear();
-                            newsList.addAll(resultList);
+                            homeViewModel.newsList.clear();
+                            homeViewModel.newsList.addAll(resultList);
                             newsAdapter.notifyDataSetChanged();
                         } else {
                             //TODO: show info error
@@ -137,8 +156,6 @@ public class HomeFragment extends Fragment {
                         swipeRefreshLayoutUtil.refreshDone();
                     }
                 });
-
-
     }
 
     private void setupListener() {
@@ -158,8 +175,7 @@ public class HomeFragment extends Fragment {
 
     private void setupViews() {
         rvList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        newsList = new ArrayList<>();
-        newsAdapter = new NewsAdapter(newsList);
+        newsAdapter = new NewsAdapter(homeViewModel.newsList);
         rvList.setAdapter(newsAdapter);
 
         swipeRefreshLayoutUtil = SwipeRefreshLayoutUtil.init(swipeRefreshLayout, new Runnable() {

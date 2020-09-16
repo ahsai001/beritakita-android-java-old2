@@ -55,7 +55,7 @@ public class NotificationUtil {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "zlcore:smartFirebaseMessagingServiceTAG");
 
-        wl.acquire();
+        wl.acquire(10*60*1000L /*10 minutes*/);
 
         //convert Map<String, String> to Map<String, Object>
         Map<String, Object> data = new HashMap<>();
