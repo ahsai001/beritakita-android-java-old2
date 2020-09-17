@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
@@ -64,12 +65,18 @@ public class DetailActivity extends AppCompatActivity {
 
         detailViewModel = new ViewModelProvider(this).get(DetailViewModel.class);
 
-        if(savedInstanceState == null || detailViewModel.newsDetail==null) {
+        if(savedInstanceState == null || detailViewModel.newsDetail.getValue()==null) {
             loadData();
         } else {
-            updateView();
+            updateView(detailViewModel.newsDetail.getValue());
         }
 
+        detailViewModel.newsDetail.observe(this, new Observer<NewsDetail>() {
+            @Override
+            public void onChanged(NewsDetail newsDetail) {
+                updateView(newsDetail);
+            }
+        });
     }
 
     private void loadData() {
@@ -85,8 +92,7 @@ public class DetailActivity extends AppCompatActivity {
                     public void onResponse(NewsDetailResponse response) {
                         if(response.getStatus() == 1){
                             //show detail in views
-                            detailViewModel.newsDetail = response.getNewsDetail();
-                            updateView();
+                            detailViewModel.newsDetail.setValue(response.getNewsDetail());
                         } else {
                             InfoUtil.showToast(DetailActivity.this, response.getMessage());
                         }
@@ -101,16 +107,16 @@ public class DetailActivity extends AppCompatActivity {
                 });
     }
 
-    private void updateView() {
-        tvTitle.setText(detailViewModel.newsDetail.getTitle());
-        getSupportActionBar().setTitle(detailViewModel.newsDetail.getTitle());
+    private void updateView(NewsDetail newsDetail) {
+        tvTitle.setText(newsDetail.getTitle());
+        getSupportActionBar().setTitle(newsDetail.getTitle());
 
-        tvDate.setText(detailViewModel.newsDetail.getCreatedAt());
-        tvUser.setText(detailViewModel.newsDetail.getCreatedBy());
-        tvBody.setText(detailViewModel.newsDetail.getBody());
+        tvDate.setText(newsDetail.getCreatedAt());
+        tvUser.setText(newsDetail.getCreatedBy());
+        tvBody.setText(newsDetail.getBody());
 
-        if(!TextUtils.isEmpty(detailViewModel.newsDetail.getPhoto())){
-            Picasso.get().load(detailViewModel.newsDetail.getPhoto()).into(ivPhoto);
+        if(!TextUtils.isEmpty(newsDetail.getPhoto())){
+            Picasso.get().load(newsDetail.getPhoto()).into(ivPhoto);
         }
     }
 
