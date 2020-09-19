@@ -3,6 +3,8 @@ package com.ahsailabs.beritakita.services;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.ahsailabs.beritakita.DetailActivity;
 import com.ahsailabs.beritakita.MainActivity;
 import com.ahsailabs.beritakita.R;
 import com.ahsailabs.beritakita.utils.NotificationUtil;
@@ -34,7 +37,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String title = data.get("title");
         String body = data.get("body");
         String photo = data.get("photo");
+        String newsId = data.get("news_id");
 
+        Log.d("beritakita-notif", "news id : "+ newsId);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
@@ -48,9 +53,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Bitmap bigPicture = getBitmapFromURL(photo);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"beritakita-2");
-        builder.setContentTitle(title).setContentText(body).setAutoCancel(true).setSmallIcon(R.drawable.notif_icon).setLargeIcon(bigPicture);
+        builder.setContentTitle(title).setContentText(body).setAutoCancel(false).setSmallIcon(R.drawable.notif_icon).setLargeIcon(bigPicture);
         //builder.setStyle(new NotificationCompat.BigTextStyle().bigText(body).setBigContentTitle(title).setSummaryText("summary"));
         builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bigPicture).bigLargeIcon(null));
+
+
+        //add content intent
+        Intent mainIntent = new Intent(this, DetailActivity.class);
+        mainIntent.putExtra(DetailActivity.PARAM_NEWS_ID, newsId);
+        PendingIntent mainPendingIntent = PendingIntent.
+                getActivity(this, 1,mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(mainPendingIntent);
+
         Notification notification = builder.build();
 
         notificationManager.notify(1, notification);

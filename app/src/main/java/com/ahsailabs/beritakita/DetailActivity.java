@@ -40,7 +40,7 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
-    private static final String PARAM_NEWS_ID = "param_news_id";
+    public static final String PARAM_NEWS_ID = "param_news_id";
     private TextView tvTitle;
     private TextView tvUser;
     private TextView tvDate;
