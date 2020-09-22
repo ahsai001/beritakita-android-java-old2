@@ -71,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 AddNewsActivity.start(this);
             } else {
                 // masuk form login
-                LoginActivity.start(this);
+                //LoginActivity.start(this);
+                Login2Activity.start(this);
             }
         });
 
@@ -215,7 +216,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }).show();
             } else {
-                LoginActivity.start(this);
+                //LoginActivity.start(this);
+                Login2Activity.start(this);
             }
             return true;
         }

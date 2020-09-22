@@ -1,11 +1,14 @@
 package com.ahsailabs.beritakita.ui.home.adapters;
 
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahsailabs.beritakita.R;
@@ -41,9 +44,21 @@ public class NewsAdapter extends BaseRecyclerViewAdapter<News, NewsAdapter.NewsV
         holder.tvUser.setText(dataModel.getCreatedBy());
         if(TextUtils.isEmpty(dataModel.getPhoto())){
             holder.ivPhoto.setVisibility(View.GONE);
+
+            holder.llTextPanel.setBackground(null);
+            holder.tvTitle.setTextColor(Color.BLACK);
+            holder.tvUser.setTextColor(Color.BLACK);
+            holder.tvDate.setTextColor(Color.BLACK);
+            holder.tvSummary.setTextColor(Color.BLACK);
         } else {
             Picasso.get().load(dataModel.getPhoto()).into(holder.ivPhoto);
             holder.ivPhoto.setVisibility(View.VISIBLE);
+
+            holder.llTextPanel.setBackgroundColor(ContextCompat.getColor(holder.llTextPanel.getContext(), R.color.news_item_overlay_color));
+            holder.tvTitle.setTextColor(Color.WHITE);
+            holder.tvUser.setTextColor(Color.WHITE);
+            holder.tvDate.setTextColor(Color.WHITE);
+            holder.tvSummary.setTextColor(Color.WHITE);
         }
         setViewClickable(holder, holder.itemView);
     }
@@ -54,6 +69,7 @@ public class NewsAdapter extends BaseRecyclerViewAdapter<News, NewsAdapter.NewsV
         private TextView tvDate;
         private TextView tvUser;
         private ImageView ivPhoto;
+        private LinearLayout llTextPanel;
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,6 +78,7 @@ public class NewsAdapter extends BaseRecyclerViewAdapter<News, NewsAdapter.NewsV
             tvDate = itemView.findViewById(R.id.tvDate);
             tvUser = itemView.findViewById(R.id.tvUser);
             ivPhoto = itemView.findViewById(R.id.ivPhoto);
+            llTextPanel = itemView.findViewById(R.id.llTextPanel);
         }
     }
 }

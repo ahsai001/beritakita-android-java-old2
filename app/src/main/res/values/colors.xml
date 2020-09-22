@@ -3,4 +3,5 @@
     <color name="colorPrimary">#00C853</color>
     <color name="colorPrimaryDark">#1A237E</color>
     <color name="colorAccent">#F57F17</color>
+    <color name="news_item_overlay_color">#99000000</color>
 </resources>

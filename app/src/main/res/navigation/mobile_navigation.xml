@@ -26,7 +26,7 @@
         android:id="@+id/LoginFragment"
         android:name="com.ahsailabs.beritakita.ui.login.LoginFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_LoginFragment_to_SecondFragment"
             app:destination="@id/LoginFragment" />
@@ -36,14 +36,14 @@
         android:id="@+id/First2Fragment"
         android:name="com.ahsailabs.beritakita.ui.addnews.AddNewsFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first2">
+        tools:layout="@layout/fragment_addnews">
     </fragment>
 
     <fragment
         android:id="@+id/First3Fragment"
         android:name="com.ahsailabs.beritakita.ui.detail.DetailFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first3">
+        tools:layout="@layout/fragment_detailnews">
     </fragment>
 
 </navigation>

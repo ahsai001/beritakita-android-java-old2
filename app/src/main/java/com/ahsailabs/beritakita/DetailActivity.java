@@ -24,6 +24,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,6 +79,7 @@ public class DetailActivity extends AppCompatActivity {
                 updateView(newsDetail);
             }
         });
+
     }
 
     private void loadData() {
