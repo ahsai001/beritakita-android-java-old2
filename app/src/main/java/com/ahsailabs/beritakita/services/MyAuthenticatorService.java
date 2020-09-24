@@ -1,4 +1,4 @@
-package com.ahsailabs.beritakita;
+package com.ahsailabs.beritakita.services;
 
 import android.app.Service;
 import android.content.Intent;

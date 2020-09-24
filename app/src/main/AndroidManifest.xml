@@ -70,7 +70,7 @@
             </intent-filter>
         </service>
 
-        <service android:name=".MyAuthenticatorService">
+        <service android:name=".services.MyAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
