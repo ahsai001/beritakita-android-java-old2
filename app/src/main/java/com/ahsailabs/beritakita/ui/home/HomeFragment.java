@@ -16,6 +16,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -158,6 +159,15 @@ public class HomeFragment extends Fragment {
 
     private void setupViews() {
         rvList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //rvList.setHasFixedSize(true);
+
+        /*RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL);
+        rvList.addItemDecoration(itemDecoration);*/
+
+        //rvList.setItemAnimator(new SlideInUpAnimator());
+
         newsList = new ArrayList<>();
         newsAdapter = new NewsAdapter(newsList);
         rvList.setAdapter(newsAdapter);
