@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="news_type">
+        <item>Religion</item>
+        <item>Sport</item>
+        <item>Science</item>
+        <item>Technology</item>
+        <item>Traveling</item>
+    </string-array>
+</resources>
