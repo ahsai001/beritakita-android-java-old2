@@ -2,9 +2,7 @@ package com.ahsailabs.beritakita.ui.home.adapters;
 
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahsailabs.beritakita.R;
+import com.ahsailabs.beritakita.bases.BaseRecyclerViewAdapter;
 import com.ahsailabs.beritakita.ui.home.models.News;
 import com.squareup.picasso.Picasso;
 
@@ -22,24 +21,23 @@ import java.util.List;
 /**
  * Created by ahmad s on 02/09/20.
  */
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
-    private List<News> modelList;
-
-    public NewsAdapter(List<News> modelList) {
-        this.modelList = modelList;
+public class NewsAdapter2 extends BaseRecyclerViewAdapter<News, NewsAdapter2.NewsViewHolder> {
+    public NewsAdapter2(List<News> modelList) {
+        super(modelList);
     }
 
-    @NonNull
     @Override
-    public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_itemview, parent, false);
+    protected int getLayout() {
+        return R.layout.news_itemview;
+    }
+
+    @Override
+    protected NewsViewHolder getViewHolder(View rootView) {
         return new NewsViewHolder(rootView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
-        News dataModel = modelList.get(position);
-
+    protected void doSettingViewWithModel(NewsViewHolder holder, News dataModel, int position) {
         holder.tvTitle.setText(dataModel.getTitle());
         holder.tvSummary.setText(dataModel.getSummary());
         holder.tvDate.setText(dataModel.getCreatedAt());
@@ -65,11 +63,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         setViewClickable(holder, holder.itemView);
     }
 
-    @Override
-    public int getItemCount() {
-        return modelList.size();
-    }
-
     public static class NewsViewHolder extends RecyclerView.ViewHolder{
         private TextView tvTitle;
         private TextView tvSummary;
@@ -87,45 +80,5 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             ivPhoto = itemView.findViewById(R.id.ivPhoto);
             llTextPanel = itemView.findViewById(R.id.llTextPanel);
         }
-    }
-
-
-
-    //give this class new functionality : view clickable
-    private OnChildViewClickListener<News> onChildViewClickListener;
-
-    public void setOnChildViewClickListener(OnChildViewClickListener<News> onChildViewClickListener){
-        this.onChildViewClickListener = onChildViewClickListener;
-    }
-
-    public interface OnChildViewClickListener<News> {
-        void onClick(View view, News dataModel, int position);
-        void onLongClick(View view, News dataModel, int position);
-    }
-
-    protected void setViewClickable(final NewsViewHolder viewHolder, View view){
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(onChildViewClickListener != null) {
-                    int position = viewHolder.getAdapterPosition();
-                    onChildViewClickListener.onClick(view, modelList.get(position), position);
-                }
-            }
-        });
-    }
-
-    protected void setViewLongClickable(final NewsViewHolder viewHolder, View view){
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if(onChildViewClickListener != null) {
-                    int position = viewHolder.getAdapterPosition();
-                    onChildViewClickListener.onLongClick(view, modelList.get(position), position);
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 }

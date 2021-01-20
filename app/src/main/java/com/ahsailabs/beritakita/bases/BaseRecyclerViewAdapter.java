@@ -50,14 +50,33 @@ public abstract class BaseRecyclerViewAdapter<DM, HV extends RecyclerView.ViewHo
     }
 
     @Override
+    public int getItemCount() {
+        return getAllItemCount();
+    }
+
+
+
+
+
+
+    //give this class new functionality
+    private OnChildViewClickListener<DM> onChildViewClickListener;
+
+    public void setOnChildViewClickListener(OnChildViewClickListener<DM> onChildViewClickListener){
+        this.onChildViewClickListener = onChildViewClickListener;
+    }
+
+    public interface OnChildViewClickListener<DM> {
+        void onClick(View view, DM dataModel, int position);
+        void onLongClick(View view, DM dataModel, int position);
+    }
+
+
+    @Override
     public int getItemViewType(int position) {
         return (position < modelList.size())?VIEW_ITEM:VIEW_PROG;
     }
 
-    @Override
-    public int getItemCount() {
-        return getAllItemCount();
-    }
 
     private int getAllItemCount(){
         return modelList.size()+(showProgress?1:0);
@@ -107,17 +126,4 @@ public abstract class BaseRecyclerViewAdapter<DM, HV extends RecyclerView.ViewHo
         });
     }
 
-
-
-
-    private OnChildViewClickListener<DM> onChildViewClickListener;
-
-    public void setOnChildViewClickListener(OnChildViewClickListener<DM> onChildViewClickListener){
-        this.onChildViewClickListener = onChildViewClickListener;
-    }
-
-    public interface OnChildViewClickListener<DM> {
-        void onClick(View view, DM dataModel, int position);
-        void onLongClick(View view, DM dataModel, int position);
-    }
 }

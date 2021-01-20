@@ -50,9 +50,12 @@
             app:counterEnabled="true"
             app:prefixText="Hello"
             app:suffixText="Oke"
+            android:hint="Masukkan Nama Anda"
+            app:startIconDrawable="@android:drawable/sym_action_email"
+            app:helperText="Hello this is helper text"
+            app:helperTextEnabled="true"
             android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputEditText
-                android:hint="Masukkan Nama Anda"
                 android:textColorHint="@color/colorPrimaryDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

@@ -15,15 +15,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ahsailabs.beritakita.DetailActivity;
 import com.ahsailabs.beritakita.R;
-import com.ahsailabs.beritakita.bases.BaseRecyclerViewAdapter;
 import com.ahsailabs.beritakita.configs.Config;
 import com.ahsailabs.beritakita.ui.home.adapters.NewsAdapter;
 import com.ahsailabs.beritakita.ui.home.models.News;
@@ -144,7 +141,7 @@ public class HomeFragment extends Fragment {
 
     private void setupListener() {
         //setup item click listener
-        newsAdapter.setOnChildViewClickListener(new BaseRecyclerViewAdapter.OnChildViewClickListener<News>() {
+        newsAdapter.setOnChildViewClickListener(new NewsAdapter.OnChildViewClickListener<News>() {
             @Override
             public void onClick(View view, News dataModel, int position) {
                 DetailActivity.start(view.getContext(), dataModel.getId());

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.ahsailabs.beritakita.ui.home.HomeFragmentVM"
+        android:name="com.ahsailabs.beritakita.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
@@ -21,6 +21,17 @@
         android:name="com.ahsailabs.beritakita.LoginActivity"
         android:label="Login nav"
         tools:layout="@layout/content_login" />
+
+
+
+
+
+
+
+
+
+
+
 
     <fragment
         android:id="@+id/LoginFragment"
