@@ -38,7 +38,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
-            android:hint="Ini EditText"
+            android:hint="This is EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -50,7 +50,7 @@
             app:counterEnabled="true"
             app:prefixText="Hello"
             app:suffixText="Oke"
-            android:hint="Masukkan Nama Anda"
+            android:hint="Input your email"
             app:startIconDrawable="@android:drawable/sym_action_email"
             app:helperText="Hello this is helper text"
             app:helperTextEnabled="true"
@@ -65,11 +65,13 @@
             android:layout_width="match_parent"
             android:layout_marginBottom="8dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            app:passwordToggleEnabled="true"
             android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputEditText
-                android:hint="Masukkan Tempat Tinggal Anda"
+                android:hint="Input your password"
                 android:textColorHint="@color/colorPrimaryDark"
                 android:layout_width="match_parent"
+                android:inputType="textPassword"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -87,9 +89,9 @@
             android:layout_height="wrap_content"/>
 
         <ImageView
-            android:src="@drawable/ic_add_shopping_cart"
-            android:layout_width="300dp"
-            android:layout_height="300dp"/>
+            android:src="@drawable/splash_logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
 
 
         <Spinner
@@ -100,17 +102,41 @@
 
         <CheckBox
             android:text="Android"
+            android:layout_gravity="left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <CheckBox
             android:text="IOS"
+            android:layout_gravity="left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <CheckBox
             android:text="Flutter"
+            android:layout_gravity="left"
             android:buttonTint="@color/colorPrimaryDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+
+        <ProgressBar
+            android:id="@+id/indeterminateCircle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <ProgressBar
+            android:id="@+id/indeterminateBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"/>
+
+        <ProgressBar
+            android:id="@+id/determinateBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="25"/>
 
     </LinearLayout>
 

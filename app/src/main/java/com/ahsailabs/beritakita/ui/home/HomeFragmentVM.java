@@ -160,7 +160,7 @@ public class HomeFragmentVM extends Fragment {
 
     private void setupListener() {
         //setup item click listener
-        newsAdapter.setOnChildViewClickListener(new BaseRecyclerViewAdapter.OnChildViewClickListener<News>() {
+        newsAdapter.setOnChildViewClickListener(new NewsAdapter.OnChildViewClickListener<News>() {
             @Override
             public void onClick(View view, News dataModel, int position) {
                 DetailActivity.start(view.getContext(), dataModel.getId());

@@ -10,7 +10,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
-    <string name="title_textview_latihan1">Hello Bro</string>
+    <string name="title_textview_latihan1">This is TextView</string>
     <string name="title_activity_login">Login</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
