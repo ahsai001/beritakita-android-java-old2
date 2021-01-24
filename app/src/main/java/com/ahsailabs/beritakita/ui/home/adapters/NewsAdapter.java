@@ -90,17 +90,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     }
 
 
+    //give this class new power : clickable itemview
+    public interface OnChildViewClickListener<News> {
+        void onClick(View view, News dataModel, int position);
+        void onLongClick(View view, News dataModel, int position);
+    }
 
-    //give this class new functionality : view clickable
     private OnChildViewClickListener<News> onChildViewClickListener;
 
     public void setOnChildViewClickListener(OnChildViewClickListener<News> onChildViewClickListener){
         this.onChildViewClickListener = onChildViewClickListener;
-    }
-
-    public interface OnChildViewClickListener<News> {
-        void onClick(View view, News dataModel, int position);
-        void onLongClick(View view, News dataModel, int position);
     }
 
     protected void setViewClickable(final NewsViewHolder viewHolder, View view){
