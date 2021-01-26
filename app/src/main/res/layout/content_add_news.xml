@@ -18,13 +18,13 @@
             android:id="@+id/tilTitle"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
+            android:hint="Title"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tietTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -32,16 +32,16 @@
             android:id="@+id/tilSummary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
+            android:hint="Summary"
             android:layout_height="wrap_content">
-
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tietSummary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top"
-                android:hint="Summary"
                 android:inputType="textMultiLine"
-                android:minLines="5" />
+                android:minLines="5"
+                android:maxLines="5"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -61,14 +61,16 @@
             android:id="@+id/tilBody"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="400dp">
+            android:hint="Body"
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tietBody"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="top"
-                android:hint="Body"
+                android:minLines="10"
+                android:maxLines="10"
                 android:inputType="textMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
