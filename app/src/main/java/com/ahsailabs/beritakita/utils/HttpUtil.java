@@ -1,10 +1,16 @@
 package com.ahsailabs.beritakita.utils;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
+import com.ahsailabs.beritakita.R;
 import com.ahsailabs.beritakita.configs.Config;
+import com.ahsailabs.beritakita.ui.login.models.LoginData;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -36,9 +42,19 @@ public class HttpUtil {
                 builder.addHeader("x-packagename", context.getPackageName());
                 builder.addHeader("x-platform","android");
 
-                SharedPreferences sharedPreferences = context.getSharedPreferences(Config.APP_PREFERENCES, Context.MODE_PRIVATE);
-                String token = sharedPreferences.getString(Config.DATA_TOKEN,"");
-                builder.addHeader("x-token", token);
+                //use sharedpreferences
+                //SharedPreferences sharedPreferences = context.getSharedPreferences(Config.APP_PREFERENCES, Context.MODE_PRIVATE);
+                //String token = sharedPreferences.getString(Config.DATA_TOKEN,"");
+
+                //use account manager
+                AccountManager am = AccountManager.get(context);
+                Account[] accounts = am.getAccountsByType(context.getPackageName());
+                if(accounts.length > 0) {
+                    Account account = accounts[0];
+                    String token = am.peekAuthToken(account, "full");
+                    builder.addHeader("x-token", token);
+                }
+
 
                 Request newRequest = builder.build();
                 return chain.proceed(newRequest);

@@ -4,6 +4,8 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,8 @@ import com.ahsailabs.beritakita.R;
 import com.ahsailabs.beritakita.configs.Config;
 import com.ahsailabs.beritakita.ui.login.models.LoginData;
 
+import java.io.IOException;
+
 /**
  * Created by ahmad s on 2019-10-04.
  */
@@ -26,7 +30,7 @@ public class SessionUtil {
         return sharedPreferences.getBoolean(Config.DATA_ISLOGGEDIN,false);*/
 
         AccountManager am = AccountManager.get(activity);
-        Account[] accounts = am.getAccountsByType(activity.getString(R.string.account_type));
+        Account[] accounts = am.getAccountsByType(activity.getPackageName());
         return accounts.length > 0;
     }
 
@@ -42,10 +46,10 @@ public class SessionUtil {
 
         final Intent authIntent = new Intent();
         authIntent.putExtra(AccountManager.KEY_ACCOUNT_NAME, loginData.getUsername());
-        authIntent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, context.getString(R.string.account_type));
+        authIntent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, context.getPackageName());
         authIntent.putExtra(AccountManager.KEY_AUTHTOKEN, loginData.getToken());
 
-        final Account account = new Account(loginData.getUsername(), context.getString(R.string.account_type));
+        final Account account = new Account(loginData.getUsername(), context.getPackageName());
         AccountManager mAccountManager = AccountManager.get(context);
         //if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
         // Creating the account on the device and setting the auth token we got
@@ -72,7 +76,7 @@ public class SessionUtil {
         editor.apply();*/
 
         AccountManager am = AccountManager.get(activity);
-        Account[] accounts = am.getAccountsByType(activity.getString(R.string.account_type));
+        Account[] accounts = am.getAccountsByType(activity.getPackageName());
         if(accounts.length > 0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 am.removeAccount(accounts[0], activity, new AccountManagerCallback<Bundle>() {
@@ -92,7 +96,7 @@ public class SessionUtil {
         }
     }
 
-    public static LoginData getLoginData(Activity activity) {
+    public static LoginData getLoginData(Activity activity) throws AuthenticatorException, OperationCanceledException, IOException {
         /*SharedPreferences sharedPreferences = context.getSharedPreferences(Config.APP_PREFERENCES, Context.MODE_PRIVATE);
         LoginData loginData = new LoginData();
         loginData.setToken(sharedPreferences.getString(Config.DATA_TOKEN, ""));
@@ -101,13 +105,14 @@ public class SessionUtil {
         return loginData;*/
 
         AccountManager am = AccountManager.get(activity);
-        Account[] accounts = am.getAccountsByType(activity.getString(R.string.account_type));
+        Account[] accounts = am.getAccountsByType(activity.getPackageName());
         if(accounts.length > 0) {
             Account account = accounts[0];
             LoginData loginData = new LoginData();
             loginData.setUsername(account.name);
             loginData.setPassword(am.getPassword(account));
             loginData.setName(am.getUserData(account,"name"));
+            loginData.setToken(am.peekAuthToken(account, "full"));
             return loginData;
         }
 

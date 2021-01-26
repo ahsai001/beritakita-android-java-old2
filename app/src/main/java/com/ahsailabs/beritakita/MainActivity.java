@@ -1,5 +1,7 @@
 package com.ahsailabs.beritakita;
 
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +37,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -155,7 +159,18 @@ public class MainActivity extends AppCompatActivity {
         if(SessionUtil.isLoggedIn(this)){
             navLogin.setVisible(false);
             navLogout.setVisible(true);
-            loginData = SessionUtil.getLoginData(this);
+            try {
+                loginData = SessionUtil.getLoginData(this);
+            } catch (AuthenticatorException e) {
+                e.printStackTrace();
+                return;
+            } catch (OperationCanceledException e) {
+                e.printStackTrace();
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
         } else {
             navLogin.setVisible(true);
             navLogout.setVisible(false);
