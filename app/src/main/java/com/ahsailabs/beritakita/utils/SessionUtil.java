@@ -82,7 +82,6 @@ public class SessionUtil {
                 am.removeAccount(accounts[0], activity, new AccountManagerCallback<Bundle>() {
                     @Override
                     public void run(AccountManagerFuture<Bundle> future) {
-
                     }
                 }, new Handler(Looper.getMainLooper()));
             } else {

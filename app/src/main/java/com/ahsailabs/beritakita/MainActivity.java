@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -221,7 +222,12 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 SessionUtil.logout(MainActivity.this);
-                                refreshDrawer();
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        refreshDrawer();
+                                    }
+                                }, 300);
                             }
                         })
                         .setNegativeButton("cancel", new DialogInterface.OnClickListener() {

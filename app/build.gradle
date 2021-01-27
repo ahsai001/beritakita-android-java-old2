@@ -10,8 +10,8 @@ android {
         applicationId "com.ahsailabs.beritakita"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 2
-        versionName "1.1.2.1"
+        versionCode 3
+        versionName "1.2.3.19"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true

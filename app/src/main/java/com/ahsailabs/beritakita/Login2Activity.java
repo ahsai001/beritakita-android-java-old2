@@ -167,13 +167,13 @@ public class Login2Activity extends AppCompatActivity {
     private void hideLoading() {
         llLoginForm.setVisibility(View.VISIBLE);
         btnLogin.setVisibility(View.VISIBLE);
-        llLoadingPanel.setVisibility(View.GONE);
+        llLoadingPanel.setVisibility(View.INVISIBLE);
         pbLoadingIndicator.setProgress(0);
     }
 
     private void showLoading() {
-        llLoginForm.setVisibility(View.GONE);
-        btnLogin.setVisibility(View.GONE);
+        llLoginForm.setVisibility(View.INVISIBLE);
+        btnLogin.setVisibility(View.INVISIBLE);
         llLoadingPanel.setVisibility(View.VISIBLE);
         pbLoadingIndicator.setProgress(50);
     }
