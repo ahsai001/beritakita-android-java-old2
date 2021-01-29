@@ -13,13 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.ahsailabs.beritakita.DetailActivity;
-import com.ahsailabs.beritakita.MainActivity;
+import com.ahsailabs.beritakita.NewsDetailActivity;
 import com.ahsailabs.beritakita.R;
-import com.ahsailabs.beritakita.utils.NotificationUtil;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,8 +56,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
         //add content intent
-        Intent mainIntent = new Intent(this, DetailActivity.class);
-        mainIntent.putExtra(DetailActivity.PARAM_NEWS_ID, newsId);
+        Intent mainIntent = new Intent(this, NewsDetailActivity.class);
+        mainIntent.putExtra(NewsDetailActivity.PARAM_NEWS_ID, newsId);
         PendingIntent mainPendingIntent = PendingIntent.
                 getActivity(this, 1,mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(mainPendingIntent);

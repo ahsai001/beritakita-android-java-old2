@@ -13,10 +13,7 @@ import com.ahsailabs.beritakita.utils.InfoUtil;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
-import com.androidnetworking.gsonparserfactory.GsonParserFactory;
 import com.androidnetworking.interfaces.ParsedRequestListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +21,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,13 +30,10 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.ahsailabs.beritakita.R;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
-public class DetailActivity extends AppCompatActivity {
+public class NewsDetailActivity extends AppCompatActivity {
     public static final String PARAM_NEWS_ID = "param_news_id";
     private TextView tvTitle;
     private TextView tvUser;
@@ -57,34 +49,36 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_news_detail);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        String newsId = getIntent().getStringExtra(PARAM_NEWS_ID);
 
         loadViews();
 
         detailViewModel = new ViewModelProvider(this).get(DetailViewModel.class);
 
         if(savedInstanceState == null || detailViewModel.newsDetail.getValue()==null) {
-            loadData();
+            loadData(newsId);
         } else {
-            updateView(detailViewModel.newsDetail.getValue());
+            updateViews(detailViewModel.newsDetail.getValue());
         }
 
         detailViewModel.newsDetail.observe(this, new Observer<NewsDetail>() {
             @Override
             public void onChanged(NewsDetail newsDetail) {
-                updateView(newsDetail);
+                updateViews(newsDetail);
             }
         });
 
     }
 
-    private void loadData() {
+    private void loadData(String newsId) {
         showLoading();
-        String newsId = getIntent().getStringExtra(PARAM_NEWS_ID);
         AndroidNetworking.get(Config.getNewsDetailUrl().replace("{id}", newsId))
                 .setOkHttpClient(HttpUtil.getCLient(this))
                 .setTag("newsdetail")
@@ -97,20 +91,20 @@ public class DetailActivity extends AppCompatActivity {
                             //show detail in views
                             detailViewModel.newsDetail.setValue(response.getNewsDetail());
                         } else {
-                            InfoUtil.showToast(DetailActivity.this, response.getMessage());
+                            InfoUtil.showToast(NewsDetailActivity.this, response.getMessage());
                         }
                         hideLoading();
                     }
 
                     @Override
                     public void onError(ANError anError) {
-                        InfoUtil.showToast(DetailActivity.this, anError.getMessage());
+                        InfoUtil.showToast(NewsDetailActivity.this, anError.getMessage());
                         hideLoading();
                     }
                 });
     }
 
-    private void updateView(NewsDetail newsDetail) {
+    private void updateViews(NewsDetail newsDetail) {
         tvTitle.setText(newsDetail.getTitle());
         getSupportActionBar().setTitle(newsDetail.getTitle());
 
@@ -163,7 +157,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public static void start(Context context, String newsId){
-        Intent detailIntent = new Intent(context, DetailActivity.class);
+        Intent detailIntent = new Intent(context, NewsDetailActivity.class);
         detailIntent.putExtra(PARAM_NEWS_ID, newsId);
         context.startActivity(detailIntent);
     }

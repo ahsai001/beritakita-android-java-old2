@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.ahsailabs.beritakita.DetailActivity;
+import com.ahsailabs.beritakita.NewsDetailActivity;
 import com.ahsailabs.beritakita.R;
 import com.ahsailabs.beritakita.configs.Config;
 import com.ahsailabs.beritakita.ui.home.adapters.NewsAdapter;
@@ -144,7 +144,7 @@ public class HomeFragment extends Fragment {
         newsAdapter.setOnChildViewClickListener(new NewsAdapter.OnChildViewClickListener<News>() {
             @Override
             public void onClick(View view, News dataModel, int position) {
-                DetailActivity.start(view.getContext(), dataModel.getId());
+                NewsDetailActivity.start(view.getContext(), dataModel.getId());
             }
 
             @Override
