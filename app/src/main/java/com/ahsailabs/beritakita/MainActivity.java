@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private CoordinatorLayout clRoot;
-    NavigationView navigationView;
+    private NavigationView navigationView;
 
     public static void start(Context context) {
         Intent mainIntent = new Intent(context, MainActivity.class);
