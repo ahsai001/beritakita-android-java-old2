@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.ahsailabs.beritakita.MainActivity;
 import com.ahsailabs.beritakita.utils.InfoUtil;
 import com.ahsailabs.beritakita.utils.SessionUtil;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
